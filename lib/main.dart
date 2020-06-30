@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import './providers/cart_provider.dart';
 import './screens/products_overview_screen.dart';
 import './screens/product_detail_screen.dart';
 import './providers/products_provider.dart';
@@ -12,9 +13,26 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider( //ChangeNotifierProvider.value
-//      value: ProductsProvider(),
-      create: (ctx)=>ProductsProvider(),
+    return MultiProvider(
+      providers: [
+//        ChangeNotifierProvider.value(
+//          value: ProductsProvider(),
+//        ),
+//        ChangeNotifierProvider.value(
+//          value: CartProvider(),
+//        ),
+//use this when creating a new instance of an object
+        ChangeNotifierProvider(
+          create: (ctx) => ProductsProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (ctx) => CartProvider(),
+        ),
+//use this if you are iterating across an existing object and changing values (like listview and gridview)
+//        ChangeNotifierProvider.value(
+//          value: CartProvider(),
+//        ),
+      ],
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
@@ -25,7 +43,7 @@ class MyApp extends StatelessWidget {
         ),
         home: ProductsOverviewScreen(),
         routes: {
-          ProductDetailScreen.routeName: (ctx)=> ProductDetailScreen(),
+          ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
         },
       ),
     );

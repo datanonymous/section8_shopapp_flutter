@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart'; //allows required decorator
 
-class Product {
+class Product with ChangeNotifier{
   final String id;
   final String title;
   final String description;
@@ -17,4 +17,10 @@ class Product {
     @required this.imageUrl,
     this.isFavorite = false,
   });
+
+  void toggleFavoriteStatus(){
+    isFavorite = !isFavorite; //! inverts the value
+    notifyListeners();
+  }
+
 }

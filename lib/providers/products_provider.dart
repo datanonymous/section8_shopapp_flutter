@@ -37,17 +37,35 @@ class ProductsProvider with ChangeNotifier{
       'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
     ),
   ];
+  
+//  var _showFavoritesOnly = false;
 
   //this getter is needed because _items is private and you don't want to alter the original list.
   // [..._items] returns a copy of the private _items list
   //should only modify data within the provider class so that notifyListeners() can be called
   List<Product> get items {
+//    if(_showFavoritesOnly){
+//      return _items.where((element) => element.isFavorite).toList();
+//    }
     return [..._items];
+  }
+  
+  List<Product> get favoriteItems{
+    return _items.where((element) => element.isFavorite).toList();
   }
 
   Product findById(String id){
     return _items.firstWhere((element) => element.id==id);
   }
+
+//  void showFavoritesOnly(){
+//    _showFavoritesOnly = true;
+//    notifyListeners();
+//  }
+//  void showAll(){
+//    _showFavoritesOnly = false;
+//    notifyListeners();
+//  }
 
   void addProduct(){
     //_items.add(value);

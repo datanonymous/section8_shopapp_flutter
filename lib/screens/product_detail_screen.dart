@@ -14,7 +14,7 @@ class ProductDetailScreen extends StatelessWidget {
     final productId = ModalRoute.of(context).settings.arguments as String;
 
     //filtering logic done in products_provider class
-//    final loadedProduct = Provider.of<ProductsProvider>(context).items.firstWhere((element) => element.id==productId);
+    //final loadedProduct = Provider.of<ProductsProvider>(context).items.firstWhere((element) => element.id==productId);
     //listen: false because you don't expect products to change
     final loadedProduct = Provider.of<ProductsProvider>(context, listen: false)
         .findById(productId);

@@ -119,6 +119,18 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     id: null,
                   );
                 },
+                validator: (value){
+                  if(value.isEmpty){
+                    return 'Please return a price.';
+                  }
+                  if(double.tryParse(value)==null){
+                    return 'Please enter a valid number.';
+                  }
+                  if(double.parse(value)<=0){
+                    return 'Please enter a number greater than 0.';
+                  }
+                  return null; //null means no error
+                },
               ),
               TextFormField(
                 decoration: InputDecoration(
@@ -135,6 +147,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     imageUrl: _editedProduct.imageUrl,
                     id: null,
                   );
+                },
+                validator: (value){
+                  if(value.isEmpty){
+                    return 'Please enter a description.';
+                  }
+                  if(value.length<10){
+                    return 'Should be at least 10 characters long.';
+                  }
+                  return null; //null means no error
                 },
               ),
               Row(
@@ -182,6 +203,18 @@ class _EditProductScreenState extends State<EditProductScreen> {
                           imageUrl: value,
                           id: null,
                         );
+                      },
+                      validator: (value){
+                        if(value.isEmpty){
+                          return 'Please enter an image URL.';
+                        }
+                        if(!value.startsWith('http')&&!value.startsWith('https')){
+                          return 'Please enter a valid URL.';
+                        }
+                        if(!value.endsWith('.png')&&!value.startsWith('.jpg')&&!value.startsWith('.jpeg')){
+                          return 'Please enter a valid image URL.';
+                        }
+                        return null; //null means no error
                       },
                     ),
                   ),

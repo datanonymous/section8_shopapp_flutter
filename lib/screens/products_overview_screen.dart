@@ -1,12 +1,12 @@
 import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../widgets/app_drawer.dart';
-import '../widgets/products_grid.dart';
-import '../providers/products_provider.dart';
-import '../widgets/badge.dart';
-import '../providers/cart_provider.dart';
+
 import './cart_screen.dart';
+import '../providers/cart_provider.dart';
+import '../widgets/app_drawer.dart';
+import '../widgets/badge.dart';
+import '../widgets/products_grid.dart';
 
 enum FilterOptions {
   Favorites,
@@ -63,7 +63,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
               icon: Icon(
                 Icons.shopping_cart,
               ),
-              onPressed: (){
+              onPressed: () {
                 Navigator.of(context).pushNamed(CartScreen.routeName);
               },
             ),
@@ -84,7 +84,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
             currentPage = position;
           });
         },
-        initialSelection: 1,
+        initialSelection: 0,
         circleColor: Colors.pink,
         activeIconColor: Colors.white,
         inactiveIconColor: Colors.purple,

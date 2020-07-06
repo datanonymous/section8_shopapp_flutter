@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:section8_shopapp_flutter/screens/edit_product_screen.dart';
-import '../widgets/app_drawer.dart';
-import '../providers/products_provider.dart';
-import '../widgets/user_product_item.dart';
+
 import './edit_product_screen.dart';
+import '../providers/products_provider.dart';
+import '../widgets/app_drawer.dart';
+import '../widgets/user_product_item.dart';
 
 class UserProductsScreen extends StatelessWidget {
   static const routeName = '/user_products_screen';
@@ -32,6 +33,7 @@ class UserProductsScreen extends StatelessWidget {
           itemBuilder: (_, i) => Column(
             children: [
               UserProductItem(
+                id: productsData.items[i].id,
                 title: productsData.items[i].title,
                 imageUrl: productsData.items[i].imageUrl,
               ),

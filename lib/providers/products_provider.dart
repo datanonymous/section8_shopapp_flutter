@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'package:http/http.dart' as http;
 import '../models/product.dart';
+import 'dart:convert';
 
 class ProductsProvider with ChangeNotifier {
   List<Product> _items = [
@@ -116,16 +117,29 @@ class ProductsProvider with ChangeNotifier {
 //  }
 
   void addProduct(Product product) {
-    final newProduct = Product(
-      title: product.title,
-      description: product.description,
-      price: product.price,
-      imageUrl: product.imageUrl,
-      id: DateTime.now().toString(),
-    );
-    _items.add(newProduct);
-    //can also _items.insert(0, newProduct); to insert at beginning of list
-    notifyListeners();
+    const url = 'https://flutterko-74940.firebaseio.com/products.json';
+    http
+        .post(url,
+            body: json.encode({
+              'title': product.title,
+              'description': product.description,
+              'imageUrl': product.imageUrl,
+              'price': product.price,
+              'isFavorite': product.isFavorite,
+            }))
+        .then((response) {
+      print(json.decode(response.body)); //unique id generated from firebase
+      final newProduct = Product(
+        title: product.title,
+        description: product.description,
+        price: product.price,
+        imageUrl: product.imageUrl,
+        id: json.decode(response.body)['name'],
+      );
+      _items.add(newProduct);
+      //can also _items.insert(0, newProduct); to insert at beginning of list
+      notifyListeners();
+    }); //JSON is JavaScript Object Notation
   }
 
   void updateProduct(String id, Product newProduct) {
@@ -138,9 +152,8 @@ class ProductsProvider with ChangeNotifier {
     }
   }
 
-  void deleteProduct(String id){
-    _items.removeWhere((element) => element.id==id);
+  void deleteProduct(String id) {
+    _items.removeWhere((element) => element.id == id);
     notifyListeners();
   }
-
 }

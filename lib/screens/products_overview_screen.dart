@@ -1,7 +1,7 @@
 import 'package:fancy_bottom_navigation/fancy_bottom_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import '../providers/products_provider.dart';
 import './cart_screen.dart';
 import '../providers/cart_provider.dart';
 import '../widgets/app_drawer.dart';
@@ -21,6 +21,36 @@ class ProductsOverviewScreen extends StatefulWidget {
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   var _showOnlyFavorites = false;
   var currentPage;
+  var _isInit = true;
+  var _isLoading = false;
+
+  @override
+  void initState() {
+//    Provider.of<ProductsProvider>(context).fetchAndSetProducts(); //won't work!
+//    Future.delayed(Duration.zero).then((value) {
+//      Provider.of<ProductsProvider>(context).fetchAndSetProducts();
+//    }); //this is a hack, would also work for modal route
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<ProductsProvider>(context)
+          .fetchAndSetProducts()
+          .then((value) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    }
+    _isInit = false;
+    // occurs more frequently than initState (once), runs after widget is initialized but before build is run for the first time
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +101,11 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
         ],
       ),
       drawer: AppDrawer(),
-      body: ProductsGrid(_showOnlyFavorites),
+      body: _isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : ProductsGrid(_showOnlyFavorites),
       //https://pub.dev/packages/fancy_bottom_navigation
       bottomNavigationBar: FancyBottomNavigation(
         tabs: [

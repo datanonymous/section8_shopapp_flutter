@@ -56,6 +56,7 @@ class CartItem extends StatelessWidget {
         ),
       ),
       child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
         margin: EdgeInsets.symmetric(
           horizontal: 15,
           vertical: 4,

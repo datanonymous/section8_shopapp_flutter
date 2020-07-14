@@ -24,6 +24,31 @@ class OrdersProvider with ChangeNotifier {
     return [..._orders]; //spread operator
   }
 
+  Future<void> fetchAndSetOrders() async {
+    const url = 'https://flutterko-74940.firebaseio.com/orders.json';
+    final response = await http.get(url);
+    print(json.decode(response.body));
+    final List<OrderItem> loadedOrders = [];
+    final extractedData = json.decode(response.body) as Map<String, dynamic>;
+    print('extracted data:');
+    print(extractedData);
+    extractedData.forEach((key, value) {
+      loadedOrders.add(OrderItem(
+          id: key,
+          amount: value['amount'],
+          products: (value['products'] as List<dynamic>)
+              .map((e) => CartItem(
+                  id: e['id'],
+                  price: e['price'],
+                  quantity: e['quantity'],
+                  title: e['title']))
+              .toList(),
+          dateTime: DateTime.parse(value['dateTime'])));
+    });
+    _orders = loadedOrders;
+    notifyListeners();
+  }
+
   Future<void> addOrder(List<CartItem> cartProducts, double total) async {
     final url = 'https://flutterko-74940.firebaseio.com/orders.json';
     final timestamp = DateTime.now();

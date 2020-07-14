@@ -32,6 +32,9 @@ class OrdersProvider with ChangeNotifier {
     final extractedData = json.decode(response.body) as Map<String, dynamic>;
     print('extracted data:');
     print(extractedData);
+    if(extractedData == null){
+      return;
+    }
     extractedData.forEach((key, value) {
       loadedOrders.add(OrderItem(
           id: key,

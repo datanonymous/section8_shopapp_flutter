@@ -90,6 +90,9 @@ class ProductsProvider with ChangeNotifier {
 
 //  var _showFavoritesOnly = false;
 
+  final String authToken;
+  ProductsProvider(this.authToken, this._items);
+
   //this getter is needed because _items is private and you don't want to alter the original list.
   // [..._items] returns a copy of the private _items list
   //should only modify data within the provider class so that notifyListeners() can be called
@@ -118,7 +121,7 @@ class ProductsProvider with ChangeNotifier {
 //  }
 
   Future<void> fetchAndSetProducts() async {
-    const url = 'https://flutterko-74940.firebaseio.com/products.json';
+    final url = 'https://flutterko-74940.firebaseio.com/products.json?auth=$authToken';
     try {
       final response = await http.get(url);
       print(response);
@@ -146,7 +149,7 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) async {
-    const url = 'https://flutterko-74940.firebaseio.com/products.json';
+    final url = 'https://flutterko-74940.firebaseio.com/products.json?auth=$authToken';
     try {
       final response = await http.post(url,
           body: json.encode({
@@ -176,7 +179,7 @@ class ProductsProvider with ChangeNotifier {
   Future<void> updateProduct(String id, Product newProduct) async {
     final prodIndex = _items.indexWhere((element) => element.id == id);
     if (prodIndex >= 0) {
-      final url = 'https://flutterko-74940.firebaseio.com/products/$id.json';
+      final url = 'https://flutterko-74940.firebaseio.com/products/$id.json?auth=$authToken';
       await http.patch(url,
           body: json.encode({
             'title': newProduct.title,
@@ -193,7 +196,7 @@ class ProductsProvider with ChangeNotifier {
 
   Future<void> deleteProduct(String id) async {
     //optimistic updating (section 10, #247) an alternative to async await
-    final url = 'https://flutterko-74940.firebaseio.com/products/$id.json';
+    final url = 'https://flutterko-74940.firebaseio.com/products/$id.json?auth=$authToken';
     final existingProductIndex =
         _items.indexWhere((element) => element.id == id);
     var existingProduct = _items[existingProductIndex];

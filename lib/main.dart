@@ -30,8 +30,9 @@ class MyApp extends StatelessWidget {
 //          value: CartProvider(),
 //        ),
 //use this when creating a new instance of an object
-        ChangeNotifierProvider(
-          create: (ctx) => ProductsProvider(),
+        ChangeNotifierProxyProvider<Auth, ProductsProvider>(
+          update: (ctx, auth, previousProducts) => ProductsProvider(auth.token,
+              previousProducts == null ? [] : previousProducts.items),
         ),
         ChangeNotifierProvider(
           create: (ctx) => CartProvider(),
@@ -40,8 +41,9 @@ class MyApp extends StatelessWidget {
 //        ChangeNotifierProvider.value(
 //          value: CartProvider(),
 //        ),
-        ChangeNotifierProvider.value(
-          value: OrdersProvider(),
+        ChangeNotifierProxyProvider<Auth, OrdersProvider>(
+          update: (ctx, auth, previousOrder) => OrdersProvider(
+              auth.token, previousOrder == null ? [] : previousOrder.orders),
         )
       ],
       child: Consumer<Auth>(

@@ -20,11 +20,11 @@ class Product with ChangeNotifier {
     this.isFavorite = false,
   });
 
-  void toggleFavoriteStatus(String authToken) async {
+  void toggleFavoriteStatus(String authToken, String userId) async {
     final oldStatus = isFavorite;
     isFavorite = !isFavorite; //! inverts the value
     notifyListeners();
-    final url = 'https://flutterko-74940.firebaseio.com/products/$id.json?auth=$authToken';
+    final url = 'https://flutterko-74940.firebaseio.com/userFavorites/$userId/$id.json?auth=$authToken';
     try {
       final response = await http.patch(url,
           body: json.encode({

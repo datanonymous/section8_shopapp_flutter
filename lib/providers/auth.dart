@@ -22,6 +22,10 @@ class Auth with ChangeNotifier {
     return null;
   }
 
+  String get userId {
+    return userId;
+  }
+
   Future<void> signup(String email, String password) async {
     //https://firebase.google.com/docs/reference/rest/auth#section-create-email-password
     const url =

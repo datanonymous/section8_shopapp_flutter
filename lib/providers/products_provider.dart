@@ -91,7 +91,8 @@ class ProductsProvider with ChangeNotifier {
 //  var _showFavoritesOnly = false;
 
   final String authToken;
-  ProductsProvider(this.authToken, this._items);
+  final String userId;
+  ProductsProvider(this.authToken, this.userId, this._items);
 
   //this getter is needed because _items is private and you don't want to alter the original list.
   // [..._items] returns a copy of the private _items list
@@ -121,15 +122,20 @@ class ProductsProvider with ChangeNotifier {
 //  }
 
   Future<void> fetchAndSetProducts() async {
-    final url = 'https://flutterko-74940.firebaseio.com/products.json?auth=$authToken';
+    var url =
+        'https://flutterko-74940.firebaseio.com/products.json?auth=$authToken';
     try {
       final response = await http.get(url);
       print(response);
       print(json.decode(response.body));
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
-      if(extractedData == null){
+      if (extractedData == null) {
         return;
       }
+      url =
+          'https://flutterko-74940.firebaseio.com/userFavorites/$userId.json?auth=$authToken';
+      final favoriteResponse = await http.get(url);
+      final favoriteData = json.decode(favoriteResponse.body);
       final List<Product> loadedProducts = [];
       extractedData.forEach((key, value) {
         loadedProducts.add(Product(
@@ -137,7 +143,7 @@ class ProductsProvider with ChangeNotifier {
           title: value['title'],
           description: value['description'],
           price: value['price'],
-          isFavorite: value['isFavorite'],
+          isFavorite: favoriteData == null ? false : favoriteData[key] ?? false, //?? is a null check. if null use left value otherwise use right
           imageUrl: value['imageUrl'],
         ));
       });
@@ -149,7 +155,8 @@ class ProductsProvider with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) async {
-    final url = 'https://flutterko-74940.firebaseio.com/products.json?auth=$authToken';
+    final url =
+        'https://flutterko-74940.firebaseio.com/products.json?auth=$authToken';
     try {
       final response = await http.post(url,
           body: json.encode({
@@ -157,7 +164,7 @@ class ProductsProvider with ChangeNotifier {
             'description': product.description,
             'imageUrl': product.imageUrl,
             'price': product.price,
-            'isFavorite': product.isFavorite,
+//            'isFavorite': product.isFavorite,
           }));
       print(json.decode(response.body)); //unique id generated from firebase
       final newProduct = Product(
@@ -179,7 +186,8 @@ class ProductsProvider with ChangeNotifier {
   Future<void> updateProduct(String id, Product newProduct) async {
     final prodIndex = _items.indexWhere((element) => element.id == id);
     if (prodIndex >= 0) {
-      final url = 'https://flutterko-74940.firebaseio.com/products/$id.json?auth=$authToken';
+      final url =
+          'https://flutterko-74940.firebaseio.com/products/$id.json?auth=$authToken';
       await http.patch(url,
           body: json.encode({
             'title': newProduct.title,
@@ -196,7 +204,8 @@ class ProductsProvider with ChangeNotifier {
 
   Future<void> deleteProduct(String id) async {
     //optimistic updating (section 10, #247) an alternative to async await
-    final url = 'https://flutterko-74940.firebaseio.com/products/$id.json?auth=$authToken';
+    final url =
+        'https://flutterko-74940.firebaseio.com/products/$id.json?auth=$authToken';
     final existingProductIndex =
         _items.indexWhere((element) => element.id == id);
     var existingProduct = _items[existingProductIndex];

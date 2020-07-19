@@ -26,10 +26,8 @@ class Product with ChangeNotifier {
     notifyListeners();
     final url = 'https://flutterko-74940.firebaseio.com/userFavorites/$userId/$id.json?auth=$authToken';
     try {
-      final response = await http.patch(url,
-          body: json.encode({
-            'isFavorite': isFavorite,
-          }));
+      final response = await http.put(url,
+          body: json.encode(isFavorite));
       //https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
       if(response.statusCode >=400){
         isFavorite = oldStatus;

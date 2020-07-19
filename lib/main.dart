@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
 //use this when creating a new instance of an object
         ChangeNotifierProxyProvider<Auth, ProductsProvider>(
           update: (ctx, auth, previousProducts) => ProductsProvider(auth.token,
+              auth.userId,
               previousProducts == null ? [] : previousProducts.items),
         ),
         ChangeNotifierProvider(

@@ -121,9 +121,15 @@ class ProductsProvider with ChangeNotifier {
 //    notifyListeners();
 //  }
 
-  Future<void> fetchAndSetProducts() async {
+  Future<void> fetchAndSetProducts([bool filterByUser = false]) async { //lesson #267, square brackets on argument mean its optional
+    //http get = fetch data
+    //http post = store data
+    //http patch = update data
+    //http put = replace data
+    //http delete = delete data
+    final filterString = filterByUser ? 'orderBy="creatorId"&"equalTo=""$userId"' : '';
     var url =
-        'https://flutterko-74940.firebaseio.com/products.json?auth=$authToken';
+        'https://flutterko-74940.firebaseio.com/products.json?auth=$authToken&$filterString';
     try {
       final response = await http.get(url);
       print(response);

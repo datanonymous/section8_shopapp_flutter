@@ -35,8 +35,10 @@ class ProductItem extends StatelessWidget {
 //              ),
 //            );
           },
-          child: Image.network(
-            product.imageUrl,
+          child: FadeInImage(
+            //lecture #279
+            placeholder: AssetImage('assets/images/product-placeholder.png'),
+            image: NetworkImage(product.imageUrl),
             fit: BoxFit.cover,
           ),
         ),
@@ -65,7 +67,7 @@ class ProductItem extends StatelessWidget {
                 duration: Duration(seconds: 2),
                 action: SnackBarAction(
                   label: 'UNDO',
-                  onPressed: (){
+                  onPressed: () {
                     cart.removeSingleItem(product.id);
                   },
                 ),

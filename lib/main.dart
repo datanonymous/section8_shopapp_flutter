@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import './screens/splash_screen.dart';
 import './screens/edit_product_screen.dart';
 import './screens/user_products_screen.dart';
 import './providers/cart_provider.dart';
@@ -31,7 +32,8 @@ class MyApp extends StatelessWidget {
 //        ),
 //use this when creating a new instance of an object
         ChangeNotifierProxyProvider<Auth, ProductsProvider>(
-          update: (ctx, auth, previousProducts) => ProductsProvider(auth.token,
+          update: (ctx, auth, previousProducts) => ProductsProvider(
+              auth.token,
               auth.userId,
               previousProducts == null ? [] : previousProducts.items),
         ),
@@ -43,10 +45,8 @@ class MyApp extends StatelessWidget {
 //          value: CartProvider(),
 //        ),
         ChangeNotifierProxyProvider<Auth, OrdersProvider>(
-          update: (ctx, auth, previousOrder) => OrdersProvider(
-              auth.token,
-              auth.userId,
-              previousOrder == null ? [] : previousOrder.orders),
+          update: (ctx, auth, previousOrder) => OrdersProvider(auth.token,
+              auth.userId, previousOrder == null ? [] : previousOrder.orders),
         )
       ],
       child: Consumer<Auth>(
@@ -58,7 +58,15 @@ class MyApp extends StatelessWidget {
             fontFamily: 'Lato',
 //        visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
-          home: auth.isAuth ? ProductsOverviewScreen() : AuthScreen(),
+          home: auth.isAuth
+              ? ProductsOverviewScreen()
+              : FutureBuilder(
+                  future: auth.tryAutoLogin(),
+                  builder: (ctx, authResultSnapshot) =>
+                      authResultSnapshot.connectionState ==
+                              ConnectionState.waiting
+                          ? SplashScreen()
+                          : AuthScreen()),
           routes: {
             ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
             CartScreen.routeName: (ctx) => CartScreen(),
